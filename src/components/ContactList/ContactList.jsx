@@ -5,7 +5,6 @@ import { deleteContact } from '../../redux/actions/contactsAction';
 import React from 'react';
 
 export const ContactList = () => {
-  // const { contacts, filter } = useSelector(state => state.contacts);
   const contacts = useSelector(state => state.contacts);
   const filter = useSelector(state => state.filter);
 
