@@ -1,17 +1,17 @@
 import s from '../ContactForm/ContactForm.module.css';
-import PropTypes from 'prop-types';
 
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 
-export const ContactForm = ({ onSubmit }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { createContact } from '../../redux/actions/contactsAction';
+
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  // const setMap = {
-  //   name: setName,
-  //   number: setNumber,
-  // };
   const handleChange = event => {
     const { name, value } = event.currentTarget;
     switch (name) {
@@ -26,14 +26,20 @@ export const ContactForm = ({ onSubmit }) => {
       default:
         break;
     }
-    // setMap[(name, value)](prevState => prevState(value));
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
     const newContact = { id: nanoid(), name, number };
-    onSubmit(newContact);
+    const contactName = newContact.name.toLowerCase();
+    if (
+      contacts.find(recordName => recordName.name.toLowerCase() === contactName)
+    ) {
+      alert(`${newContact.name} is already in contacts.`);
+      return;
+    }
+    dispatch(createContact(newContact));
     resetForm();
   };
 
@@ -75,8 +81,4 @@ export const ContactForm = ({ onSubmit }) => {
       </button>
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };

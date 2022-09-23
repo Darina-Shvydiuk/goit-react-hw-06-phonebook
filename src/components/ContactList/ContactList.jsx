@@ -1,36 +1,40 @@
 import s from '../ContactList/ContactList.module.css';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-export class ContactList extends Component {
-  render() {
-    return (
-      <ul className={s.list}>
-        {this.props.contacts.map(({ id, name, number }) => {
-          return (
-            <li key={id} className={s.item}>
-              <span className={s.name}>{name}: </span>
-              <span className={s.tel}>{number} </span>
-              <button
-                className={s.btn}
-                type="button"
-                onClick={() => this.props.handleDelete(id)}
-              >
-                Delete
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from '../../redux/actions/contactsAction';
+import React from 'react';
+
+export const ContactList = () => {
+  // const { contacts, filter } = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
+
+  const dispatch = useDispatch();
+
+  const filterContacts = useMemo(() => {
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(recordName =>
+      recordName.name.toLowerCase().includes(normalizedFilter)
     );
-  }
-}
-ContactList.propTypes = {
-  handleDelete: PropTypes.func.isRequired,
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
+  }, [contacts, filter]);
+
+  return (
+    <ul className={s.list}>
+      {filterContacts.map(({ id, name, number }) => {
+        return (
+          <li key={id} className={s.item}>
+            <span className={s.name}>{name}: </span>
+            <span className={s.tel}>{number} </span>
+            <button
+              className={s.btn}
+              type="button"
+              onClick={() => dispatch(deleteContact(id))}
+            >
+              Delete
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
 };

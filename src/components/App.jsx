@@ -1,73 +1,83 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import { ContactForm } from './ContactForm';
 import { Filter } from './Filter';
 import { ContactList } from './ContactList';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { createContact, deleteContact } from '../redux/actions/contactsAction';
+// import { filterContacts } from '../redux/actions/filterAction';
+
 import s from './App.module.css';
 
-const CONTACTS = 'contacts';
+// const CONTACTS = 'contacts';
 
-const getLocalData = () => JSON.parse(localStorage.getItem(CONTACTS));
+// const getLocalData = () => JSON.parse(localStorage.getItem(CONTACTS));
 
-const initialContacts = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+// const initialContacts = [
+//   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+//   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+//   { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+//   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+// ];
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () => getLocalData() ?? initialContacts
-  );
-  console.log(contacts);
-  const [filter, setFilter] = useState('');
+  // const dispatch = useDispatch();
+  // const contacts = useSelector(state => state.contacts);
+  // const filter = useSelector(state => state.filter);
+  // const [contacts, setContacts] = useState(
+  //   () => getLocalData() ?? initialContacts
+  // );
 
-  useEffect(() => {
-    localStorage.setItem(CONTACTS, JSON.stringify(contacts));
-  }, [contacts]);
+  // const [filter, setFilter] = useState('');
 
-  const handelFormSubmit = data => {
-    const contactName = data.name.toLowerCase();
-    if (
-      contacts.find(recordName => recordName.name.toLowerCase() === contactName)
-    ) {
-      alert(`${data.name} is already in contacts.`);
-      return;
-    }
+  // useEffect(() => {
+  //   localStorage.setItem(CONTACTS, JSON.stringify(contacts));
+  // }, [contacts]);
 
-    setContacts(prevContacts => [...prevContacts, data]);
-  };
+  // const handeleAddContact = data => {
+  //   const newContact = { ...data };
+  //   const contactName = data.name.toLowerCase();
+  //   if (
+  //     contacts.find(recordName => recordName.name.toLowerCase() === contactName)
+  //   ) {
+  //     alert(`${data.name} is already in contacts.`);
+  //     return;
+  //   } else {
+  //     dispatch(createContact(newContact));
+  //   }
 
-  const handleFilter = event => {
-    setFilter(event.currentTarget.value);
-  };
+  //   // setContacts(prevContacts => [...prevContacts, data]);
+  // };
 
-  const handleDelete = toDelete => {
-    setContacts(contacts.filter(({ id }) => id !== toDelete));
-  };
+  // const handleFilter = ({ target: { value } }) => {
+  //   dispatch(filterContacts(value));
+  // };
+
+  // const handleDelete = toDelete => {
+  //   dispatch(deleteContact(toDelete));
+  // };
 
   // варіант без useMemo
   // const normalizedFilter = filter.toLowerCase();
 
-  // const filterContacts = contacts.filter(recordName =>
+  // const filterContactsPhone = contacts?.filter(recordName =>
   //   recordName.name.toLowerCase().includes(normalizedFilter)
   // );
 
-  const filterContacts = useMemo(() => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(recordName =>
-      recordName.name.toLowerCase().includes(normalizedFilter)
-    );
-  }, [contacts, filter]);
+  // const filterContacts = useMemo(() => {
+  //   const normalizedFilter = filter.toLowerCase();
+  //   return contacts.filter(recordName =>
+  //     recordName.name.toLowerCase().includes(normalizedFilter)
+  //   );
+  // }, [contacts, filter]);
 
   return (
     <div className={s.container}>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={handelFormSubmit} />
+      <ContactForm />
 
       <h2>Contacts</h2>
-      <Filter filter={filter} handleFilter={handleFilter} />
-      <ContactList contacts={filterContacts} handleDelete={handleDelete} />
+      <Filter />
+      <ContactList />
     </div>
   );
 };
